@@ -257,7 +257,7 @@ static int hwc_prepare_primary(hwc_composer_device_1 *dev,
     if (LIKELY(list && (list->numHwLayers > 1 ||
                     ctx->mMDP.version < qdutils::MDP_V4_0)) &&
             (ctx->dpyAttr[dpy].isActive ||
-             ctx->mHDMIDisplay->isHDMIPrimaryDisplay())
+				isPrimaryPluggable(ctx))
             && !ctx->dpyAttr[dpy].isPause) {
 
         // When HDMI is primary we should rely on the first valid
@@ -457,7 +457,7 @@ static int hwc_setPowerMode(struct hwc_composer_device_1* dev, int dpy,
 
     switch(dpy) {
     case HWC_DISPLAY_PRIMARY:
-        if(ctx->mHDMIDisplay->isHDMIPrimaryDisplay()) {
+	 if(isPrimaryPluggable(ctx)) {
             if(ctx->dpyAttr[dpy].connected) {
                 // When HDMI is connected as primary we clean up resources
                 // and call commit to generate a black frame on the interface.

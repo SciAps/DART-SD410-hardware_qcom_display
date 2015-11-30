@@ -119,6 +119,8 @@ struct DisplayAttributes {
     bool customFBSize;
     uint32_t xres_new;
     uint32_t yres_new;
+    //Denotes whether the display is pluggable
+    bool isPluggable;
 
 };
 
@@ -693,7 +695,9 @@ static inline bool isSecondaryAnimating(hwc_context_t* ctx) {
 static inline bool isVDConnected(hwc_context_t* ctx) {
     return ctx->dpyAttr[HWC_DISPLAY_VIRTUAL].connected;
 }
-
+inline bool isPrimaryPluggable(hwc_context_t* ctx) {
+	return ctx->dpyAttr[HWC_DISPLAY_PRIMARY].isPluggable;
+	}
 };
 
 #endif //HWC_UTILS_H

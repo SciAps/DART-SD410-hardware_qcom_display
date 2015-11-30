@@ -300,6 +300,8 @@ static void changeDefaultAppBufferCount() {
 void initContext(hwc_context_t *ctx)
 {
     overlay::Overlay::initOverlay();
+    ctx->dpyAttr[HWC_DISPLAY_PRIMARY].isPluggable =
+	qdutils::MDPVersion::getInstance().isPluggable();
     ctx->mHDMIDisplay = new HDMIDisplay();
     uint32_t priW = 0, priH = 0;
     // 1. HDMI as Primary
@@ -308,7 +310,7 @@ void initContext(hwc_context_t *ctx)
     // 2. HDMI as External
     //    -Initialize HDMI class for use with external display
     //    -Use vscreeninfo to populate display configs
-    if(ctx->mHDMIDisplay->isHDMIPrimaryDisplay()) {
+	if(isPrimaryPluggable(ctx)) {
         int connected = ctx->mHDMIDisplay->getConnectedState();
         if(connected == 1) {
             ctx->mHDMIDisplay->configure();
@@ -1245,7 +1247,7 @@ bool isActionSafePresent(hwc_context_t *ctx, int dpy) {
     // Disable Action safe for 8974 due to HW limitation for downscaling
     // layers with overlapped region
     // Disable Actionsafe for non HDMI displays.
-    if(!(dpy == HWC_DISPLAY_EXTERNAL) ||
+    if(!(dpy == HWC_DISPLAY_EXTERNAL || isPrimaryPluggable(ctx)) ||
         qdutils::MDPVersion::getInstance().is8x74v2() ||
         ctx->mHDMIDisplay->isCEUnderscanSupported()) {
         return false;
@@ -2801,7 +2803,7 @@ void handle_offline(hwc_context_t* ctx, int dpy) {
     // that all the fd's are closed. This will ensure that the HDMI
     // core turns off and that we receive an event the next time the
     // cable is connected.
-    if (ctx->mHDMIDisplay->isHDMIPrimaryDisplay()) {
+if (isPrimaryPluggable(ctx)){
         clearPipeResources(ctx, dpy);
     }
     ctx->mHDMIDisplay->teardown();

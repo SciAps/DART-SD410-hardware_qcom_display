@@ -62,8 +62,6 @@ public:
     int getFd() const { return mFd; };
     bool getMDPScalingMode() const { return mMDPScalingMode; }
     void activateDisplay();
-    /* Returns true if HDMI is the PRIMARY display device*/
-    bool isHDMIPrimaryDisplay();
     int getConnectedState();
     /* when HDMI is an EXTERNAL display, PRIMARY display attributes are needed
        for scaling mode */
@@ -87,6 +85,7 @@ private:
     void setAttributes();
     void getAttrForMode(uint32_t& width, uint32_t& height, uint32_t& fps);
     int openDeviceNode(const char* node, int fileMode) const;
+    bool isHDMIPrimaryDisplay();
 
     int mFd;
     int mFbNum;
